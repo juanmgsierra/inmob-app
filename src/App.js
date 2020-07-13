@@ -1,26 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import Grid from "@material-ui/core/Grid";
+import "./App.css";
+import ListaInmuebles from "./components/views/ListaInmuebles";
+import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
+import theme from "./theme/theme";
+import AppNavbar from "./components/layout/AppNavbar";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Registro from './components/security/Registro'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  render() {
+    return (
+      <Router>
+        <MuiThemeProvider theme={theme}>
+          <AppNavbar />
+          <Grid container>
+            <Switch>
+              <Route path="/" exact component={ListaInmuebles}></Route>
+              <Route path="/auth/register" exact component={Registro}></Route>
+            </Switch>
+          </Grid>
+        </MuiThemeProvider>
+      </Router>
+    );
+  }
 }
 
 export default App;
