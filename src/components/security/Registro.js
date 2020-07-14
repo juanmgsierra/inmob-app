@@ -8,6 +8,8 @@ import {
   Button,
 } from "@material-ui/core";
 import LockOutLineIcon from "@material-ui/icons/LockOutlined";
+import { compose } from "recompose";
+import { consumerFirebase } from "../../server";
 
 const style = {
   paper: {
@@ -29,7 +31,60 @@ const style = {
     marginBottom: 20,
   },
 };
+
+const usuarioInicial = {
+  nombre: "",
+  apellido: "",
+  email: "",
+  password: "",
+};
 class Registro extends Component {
+  state = {
+    firebase: null,
+    usuario: {
+      nombre: "",
+      apellido: "",
+      email: "",
+      password: "",
+    },
+  };
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.firebase === prevState.firebase) {
+      return null;
+    }
+
+    return {
+      firebase: nextProps.firebase,
+    };
+  }
+
+  onChange = (e) => {
+    let usuario = Object.assign({}, this.state.usuario);
+    usuario[e.target.name] = e.target.value;
+    this.setState({
+      usuario: usuario,
+    });
+  };
+
+  registrarUsuario = (e) => {
+    e.preventDefault();
+    console.log("imprimir objeto usuario", this.state.usuario);
+    const { usuario, firebase} = this.state;    
+    firebase.db
+      .collection("Users")
+      .add(usuario)
+      .then((usuarioAfter) => {
+        console.log("insertado", usuarioAfter);
+        this.setState({
+            usuario:usuarioInicial
+        })
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  };
+
   render() {
     return (
       <Container maxWidth="md">
@@ -43,22 +98,38 @@ class Registro extends Component {
           <form style={style.form}>
             <Grid container spacing={2}>
               <Grid item md={6} xs={12}>
-                <TextField name="nombre" fullWidth label="Ingrese su nombre" />
+                <TextField
+                  name="nombre"
+                  onChange={this.onChange}
+                  value={this.state.usuario.nombre}
+                  fullWidth
+                  label="Ingrese su nombre"
+                />
               </Grid>
               <Grid item md={6} xs={12}>
                 <TextField
                   name="apellido"
+                  onChange={this.onChange}
+                  value={this.state.usuario.apellido}
                   fullWidth
                   label="Ingrese su apellido"
                 />
               </Grid>
               <Grid item md={6} xs={12}>
-                <TextField name="email" fullWidth label="Ingrese su email" />
+                <TextField
+                  name="email"
+                  onChange={this.onChange}
+                  value={this.state.usuario.email}
+                  fullWidth
+                  label="Ingrese su email"
+                />
               </Grid>
               <Grid item md={6} xs={12}>
                 <TextField
                   type="password"
                   name="password"
+                  value={this.state.usuario.password}
+                  onChange={this.onChange}
                   fullWidth
                   label="Ingrese su contraseña"
                 />
@@ -67,6 +138,7 @@ class Registro extends Component {
                 <Grid item xs={12} md={6}>
                   <Button
                     type="submit"
+                    onClick={this.registrarUsuario}
                     variant="contained"
                     fullWidth
                     size="large"
@@ -85,4 +157,4 @@ class Registro extends Component {
   }
 }
 
-export default Registro;
+export default compose(consumerFirebase)(Registro);

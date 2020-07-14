@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
 import "./App.css";
 import ListaInmuebles from "./components/views/ListaInmuebles";
-import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
+import { ThemeProvider as MuiThemeProvider } from "@material-ui/core/styles";
 import theme from "./theme/theme";
 import AppNavbar from "./components/layout/AppNavbar";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
