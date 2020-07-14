@@ -7,6 +7,7 @@ import theme from "./theme/theme";
 import AppNavbar from "./components/layout/AppNavbar";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Registro from './components/security/Registro'
+import login from './components/security/login'
 
 class App extends Component {
   render() {
@@ -18,6 +19,7 @@ class App extends Component {
             <Switch>
               <Route path="/" exact component={ListaInmuebles}></Route>
               <Route path="/auth/register" exact component={Registro}></Route>
+              <Route path="/auth/login" exact component={login}></Route>
             </Switch>
           </Grid>
         </MuiThemeProvider>
