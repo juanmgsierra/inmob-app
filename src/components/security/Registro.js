@@ -71,9 +71,21 @@ class Registro extends Component {
     e.preventDefault();
     console.log("imprimir objeto usuario", this.state.usuario);
     const { usuario, firebase} = this.state;    
-    firebase.db
+
+    firebase.auth
+    .createUserWithEmailAndPassword(usuario.email,usuario.password)
+    .then(auth=>{
+
+        const usuarioDB = {
+            idUsuario: auth.user.uid,
+            email: usuario.email,
+            nombre: usuario.nombre,
+            apellido: usuario.apellido
+        }
+
+      firebase.db
       .collection("Users")
-      .add(usuario)
+      .add(usuarioDB)
       .then((usuarioAfter) => {
         console.log("insertado", usuarioAfter);
         this.setState({
@@ -83,6 +95,9 @@ class Registro extends Component {
       .catch((error) => {
         console.log("error", error);
       });
+    }).catch(error=>{
+        console.log(error)
+    })
   };
 
   render() {

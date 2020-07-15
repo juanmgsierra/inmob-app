@@ -7,9 +7,12 @@ import {
   Button,
 } from "@material-ui/core";
 import LockOutLineIcon from "@material-ui/icons/LockOutlined";
+import { compose } from "recompose";
+import { consumerFirebase } from "../../server";
+
 const style = {
   paper: {
-    marginTop: 9,
+    marginTop: 40,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -33,12 +36,35 @@ class login extends Component {
     },
   };
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.firebase === prevState.firebase) {
+      return null;
+    }
+    return {
+      firebase: nextProps.firebase,
+    };
+  }
+
   onChange = (e) => {
     let usuario = Object.assign({}, this.state.usuario);
     usuario[e.target.name] = e.target.value;
     this.setState({
       usuario: usuario,
     });
+  };
+
+  login = (e) => {
+    e.preventDefault();
+    const { firebase, usuario } = this.state;
+
+    firebase.auth
+      .signInWithEmailAndPassword(usuario.email, usuario.password)
+      .then((auth) => {
+        this.props.history.push("/home");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   render() {
@@ -58,15 +84,20 @@ class login extends Component {
               name="email"
               fullWidth
               margin="normal"
+              onChange={this.onChange}
+              value={this.state.usuario.email}
             />
             <TextField
               variant="outlined"
               label="Password"
               type="password"
+              name="password"
               fullWidth
               margin="normal"
-            />
-            <Button type="submit" fullWidth variant="contained" color="primary">
+              onChange={this.onChange}
+              value={this.state.usuario.password}
+            />           
+            <Button type="submit" fullWidth variant="contained" color="primary" onClick={this.login}>
               Enviar
             </Button>
           </form>
@@ -76,4 +107,4 @@ class login extends Component {
   }
 }
 
-export default login;
+export default compose(consumerFirebase)(login);

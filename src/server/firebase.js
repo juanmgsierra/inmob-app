@@ -1,5 +1,6 @@
 import app from 'firebase/app';
 import 'firebase/firestore';
+import 'firebase/auth'
 
 const firebaseConfig = {
     apiKey: "AIzaSyBdxumaSsLfNCAbMwZaadL2tRqERTW2nk4",
@@ -15,7 +16,14 @@ class Firebase{
     constructor(){
         app.initializeApp(firebaseConfig);
         this.db = app.firestore();
-    }    
+        this.auth = app.auth();
+    } 
+    
+    isStarted(){
+        return new Promise(resolve => {
+            this.auth.onAuthStateChanged(resolve);
+        })
+    }
 }
 
 export default Firebase;
