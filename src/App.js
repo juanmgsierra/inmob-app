@@ -8,32 +8,62 @@ import AppNavbar from "./components/layout/AppNavbar";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Registro from "./components/security/Registro";
 import login from "./components/security/login";
-import { FirebaseContext } from './server'
+import { FirebaseContext } from "./server";
+import { useStateValue } from "./sesion/store";
+import { Snackbar } from "@material-ui/core";
+import openSnackbarReducer from "./sesion/reducers/openSnackbarReducer";
+
 
 function App(props) {
   let firebase = React.useContext(FirebaseContext);
   const [autenticacionIniciada, setupFirebaseInicial] = React.useState(false);
 
-  useEffect(()=>{
-    firebase.isStarted().then(val=>{
-      setupFirebaseInicial(val);
-    })
-  })
+  const [{ openSnackbar }, dispatch] = useStateValue();
 
-  return autenticacionIniciada !== false ?(
-    <Router>
-      <MuiThemeProvider theme={theme}>
-        <AppNavbar />
-        <Grid container>
-          <Switch>
-            <Route path="/home" exact component={ListaInmuebles}></Route>
-            <Route path="/auth/register" exact component={Registro}></Route>
-            <Route path="/auth/login" exact component={login}></Route>
-          </Switch>
-        </Grid>
-      </MuiThemeProvider>
-    </Router>
-  ): null;
+  useEffect(() => {
+    firebase.isStarted().then((val) => {
+      setupFirebaseInicial(val);
+    });
+  });
+
+  return autenticacionIniciada !== false ? (
+    <React.Fragment>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={openSnackbar ? openSnackbarReducer.open : false}
+        autoHideDuration={3000}
+        ContentProps={{
+          "aria-describedby": "message-id",
+        }}
+        message={
+          <span id="message-id">
+            {openSnackbar ? openSnackbar.message : ""}
+          </span>
+        }
+        onClose={() =>
+          dispatch({
+            type: "OPEN_SNACKBAR",
+            openMensaje: {
+              open: false,
+              mensaje: "",
+            },
+          })
+        }
+      ></Snackbar>
+      <Router>
+        <MuiThemeProvider theme={theme}>
+          <AppNavbar />
+          <Grid container>
+            <Switch>
+              <Route path="/home" exact component={ListaInmuebles}></Route>
+              <Route path="/auth/register" exact component={Registro}></Route>
+              <Route path="/auth/login" exact component={login}></Route>
+            </Switch>
+          </Grid>
+        </MuiThemeProvider>
+      </Router>
+    </React.Fragment>
+  ) : null;
 }
 
 export default App;
