@@ -11,7 +11,6 @@ import login from "./components/security/login";
 import { FirebaseContext } from "./server";
 import { useStateValue } from "./sesion/store";
 import { Snackbar } from "@material-ui/core";
-import openSnackbarReducer from "./sesion/reducers/openSnackbarReducer";
 
 
 function App(props) {
@@ -30,14 +29,14 @@ function App(props) {
     <React.Fragment>
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        open={openSnackbar ? openSnackbarReducer.open : false}
+        open={openSnackbar ? openSnackbar.open : false}
         autoHideDuration={3000}
         ContentProps={{
           "aria-describedby": "message-id",
         }}
         message={
           <span id="message-id">
-            {openSnackbar ? openSnackbar.message : ""}
+            {openSnackbar ? openSnackbar.mensaje : ""}
           </span>
         }
         onClose={() =>
