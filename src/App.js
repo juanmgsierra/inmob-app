@@ -11,7 +11,7 @@ import login from "./components/security/login";
 import { FirebaseContext } from "./server";
 import { useStateValue } from "./sesion/store";
 import { Snackbar } from "@material-ui/core";
-
+import RutaAutenticada from './components/security/rutaAutenticada';
 
 function App(props) {
   let firebase = React.useContext(FirebaseContext);
@@ -54,7 +54,7 @@ function App(props) {
           <AppNavbar />
           <Grid container>
             <Switch>
-              <Route path="/home" exact component={ListaInmuebles}></Route>
+              <RutaAutenticada exact path="/home" autenticadoFirebase={firebase.auth.currentUser} component={ListaInmuebles} / >
               <Route path="/auth/register" exact component={Registro}></Route>
               <Route path="/auth/login" exact component={login}></Route>
             </Switch>

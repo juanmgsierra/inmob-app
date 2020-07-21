@@ -1,13 +1,14 @@
 import React, { Component } from "react";
-import { Toolbar, Typography, Button, IconButton, Drawer, Menu } from "@material-ui/core";
+import { Toolbar, Typography, Button, IconButton, Drawer, Menu, Avatar } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { consumerFirebase } from "../../../server"
 import { compose } from "recompose"
 import { StateContext } from "../../../sesion/store" 
 import { salirSesion } from "../../../sesion/actions/sesionAction"
 import {MenuDerecha} from "./menuDerecha"
+import {MenuIzquierda} from "./menuIzquierda"
 import fotoUsuarioTemp from '../../../logo.svg'
-import { withRouter } from 'react-router-dom'
+import { withRouter, Link } from 'react-router-dom'
 const styles = theme => ({
   sectionDesktop:{
     display: "none",
@@ -45,7 +46,8 @@ class BarSession extends Component {
 
   state = {
     firebase: null,
-    right: false
+    right: false,
+    left:false
   }
 
   salirSesion = () => {
@@ -53,7 +55,7 @@ class BarSession extends Component {
     const [{sesion},dispatch] = this.context;
 
     salirSesion(dispatch,firebase).then(success=> {
-      this.props.history.push("auth/login")
+      this.props.history.push("/auth/login")
     });
   }
 
@@ -82,6 +84,21 @@ class BarSession extends Component {
 
     return (
       <div>
+         <Drawer
+         open={this.state.left}
+         onClose={this.toggleDrawer("left",false)}
+          anchor="left"
+        >
+          <div 
+            role="button"
+            onClick={this.toggleDrawer("left",false)}
+            onKeyDown={this.toggleDrawer("left",false)}
+          >
+            <MenuIzquierda classes={classes} >
+            </MenuIzquierda>
+          </div>
+        </Drawer>
+        
         <Drawer
          open={this.state.right}
          onClose={this.toggleDrawer("right",false)}
@@ -101,13 +118,23 @@ class BarSession extends Component {
           </div>
         </Drawer>
         <Toolbar>
-          <IconButton color="inherit">
+          <IconButton color="inherit"  
+          onClick= {this.toggleDrawer("left", true)} 
+          >
             <i className="material-icons">menu</i>
           </IconButton>
           <Typography variant="h6">VAXI HOMES</Typography>
           <div className={classes.grow}></div>
           <div className={classes.sectionDesktop}>
-            <Button color="inherit">Login</Button>
+            <IconButton color="inherit" component={Link} to="">
+              <i className="material-icons">mail_outline</i>
+            </IconButton>
+          <Button color="inherit">{textoUsuario}</Button>
+          <Avatar src={fotoUsuarioTemp}>            
+          </Avatar>
+            <Button color="inherit" onClick={this.salirSesion} >
+              Salir
+            </Button>
           </div>
           <div className={classes.sectionMobile}>
             <IconButton color="inherit"

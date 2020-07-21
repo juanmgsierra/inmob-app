@@ -11,7 +11,7 @@ export const MenuDerecha = ({
   <div className={classes.list}>
     <List>
       <ListItem button component={Link} to="/auth/registrarUsuario">
-        <Avatar classes={{ primary:classes.avatarSize }} 
+        <Avatar 
             src={fotoUsuario}            
         />
         <ListItemText classes={{primary : classes.listItemText}} primary={textoUsuario} /> 
