@@ -56,7 +56,6 @@ class AppNavbar extends Component {
 
   render() {
     const [{ sesion }, dispatch] = this.context;
-
     return sesion ? (
       sesion.autenticado ? (
         <div>

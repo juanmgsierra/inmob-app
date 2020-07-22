@@ -80,7 +80,7 @@ class BarSession extends Component {
     const [{sesion},dispatch] = this.context;
 
     const {usuario} = sesion
-    let textoUsuario = usuario.nombre+" "+usuario.apellido;
+    let textoUsuario = `${usuario.nombre} ${usuario.apellido}`
 
     return (
       <div>

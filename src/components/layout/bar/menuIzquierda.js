@@ -1,10 +1,11 @@
 import React from 'react';
-import { List, Link, ListItemText, Divider, ListItem } from "@material-ui/core"
+import { List, ListItemText, Divider, ListItem } from "@material-ui/core"
+import {Link} from 'react-router-dom' 
 
 export const MenuIzquierda = ({classes}) => (
     <div className={classes.list}>
         <List>
-            <ListItem component={Link} button to="">
+            <ListItem component={Link} button to="/auth/perfil">
                 <i className="material-icons">account_box</i>
                 <ListItemText classes={{primary: classes.listItemText}} primary="Perfil" />
             </ListItem>
