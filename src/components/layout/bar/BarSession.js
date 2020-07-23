@@ -111,7 +111,7 @@ class BarSession extends Component {
           >
             <MenuDerecha classes={classes} 
             usuario={usuario} textoUsuario={textoUsuario}
-            fotoUsuario={fotoUsuarioTemp}
+            fotoUsuario={usuario.foto || fotoUsuarioTemp}
             salirSesion={this.salirSesion}>
 
             </MenuDerecha>
@@ -130,7 +130,7 @@ class BarSession extends Component {
               <i className="material-icons">mail_outline</i>
             </IconButton>
           <Button color="inherit">{textoUsuario}</Button>
-          <Avatar src={fotoUsuarioTemp}>            
+          <Avatar src={usuario.foto || fotoUsuarioTemp}>            
           </Avatar>
             <Button color="inherit" onClick={this.salirSesion} >
               Salir

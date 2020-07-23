@@ -11,7 +11,8 @@ import {
 import reactFoto from "../../logo.svg";
 import { consumerFirebase } from "../../server";
 import { openMensajePantalla } from "../../sesion/actions/snackbarAction";
-
+import ImageUploader from "react-images-upload";
+import uuid from 'uuid';
 const style = {
   paper: {
     marginTop: 8,
@@ -33,7 +34,7 @@ const PerfilUsuario = (props) => {
   const [{ sesion }, dispatch] = useStateValue();
 
   const firebase = props.firebase;
-  
+
   let [estado, cambiarEstado] = useState({
     nombre: "",
     apellido: "",
@@ -50,29 +51,30 @@ const PerfilUsuario = (props) => {
     }));
   };
 
-  const guardarCambios = e => {
-      e.preventDefault();
-      firebase.db
+  const guardarCambios = (e) => {
+    e.preventDefault();
+    firebase.db
       .collection("Users")
       .doc(firebase.auth.currentUser.uid)
-      .set(estado, {merge:true})
+      .set(estado, { merge: true })
       .then(() => {
-          dispatch({
-              type: "INICIAR_SESION",
-              sesion:estado,
-              autenticado:true
-          })
-          openMensajePantalla(dispatch,{
-              open:true,
-              mensaje:"Se guardaron los cambios"
-          })
-      }).catch(error=>{
-        openMensajePantalla(dispatch,{
-            open:true,
-            mensaje:`Error al guardar en la base de datos ${error}`
-        })
+        dispatch({
+          type: "INICIAR_SESION",
+          sesion: estado,
+          autenticado: true,
+        });
+        openMensajePantalla(dispatch, {
+          open: true,
+          mensaje: "Se guardaron los cambios",
+        });
       })
-  }
+      .catch((error) => {
+        openMensajePantalla(dispatch, {
+          open: true,
+          mensaje: `Error al guardar en la base de datos ${error}`,
+        });
+      });
+  };
   useEffect(() => {
     if (estado.id === "") {
       if (sesion) {
@@ -80,6 +82,37 @@ const PerfilUsuario = (props) => {
       }
     }
   });
+
+  const subirFoto = fotos =>{
+    const foto = fotos[0];
+    const claveUnicaFoto = uuid.v4();
+    const nombreFoto = foto.name;
+    const extensionFoto = nombreFoto.split('.').pop();
+
+    const alias = (nombreFoto.split(".")[0] + "_" + claveUnicaFoto +"."+extensionFoto).replace(/\s/g,"_").toLowerCase();
+    
+    firebase.guardarDocumento(alias,foto).then(metadata =>{
+      firebase.devolverDocumento(alias).then(urlFoto=>{
+        estado.foto = urlFoto;
+        firebase.db
+        .collection("Users")
+        .doc(firebase.auth.currentUser.uid)
+        .set(
+          {
+            foto: urlFoto
+          },{merge:true}
+        ).then(userDB=>{
+          dispatch({
+            type:"INICIAR_SESION",
+            sesion:estado,
+            autenticado:true
+          })
+        })
+      })
+    })
+  }
+
+  let fotoKey = uuid.v4();
   return sesion ? (
     <Container component="main" maxWidth="md" justify="center">
       <div style={style.paper}>
@@ -125,8 +158,19 @@ const PerfilUsuario = (props) => {
                 variant="outlined"
                 fullWidth
                 label="Telefono"
-                value={estado.telefono || ''}
+                value={estado.telefono || ""}
                 onChange={cambiarDato}
+              />
+            </Grid>
+            <Grid item xs={12} md={12}>
+              <ImageUploader
+                withIcon={false}
+                key={1000}
+                singleImage={true}
+                buttonText="Seleccione su imagen de perfil"
+                onChange={subirFoto}
+                imgExtension={[".jpg", ".gif", ".png", ".jpeg"]}
+                maxFileSize={5242880}
               />
             </Grid>
           </Grid>
