@@ -19,6 +19,16 @@ class Firebase{
         this.db = app.firestore();
         this.auth = app.auth();
         this.storage = app.storage();
+
+        this.storage.ref().constructor.prototype.guardarDocumentos = function(documentos){
+            var ref=this;
+            //funcion que envia un arreglo de fotos y devuelve sus urls
+            return Promise.all(documentos.map(function(file){
+                return ref.child(file.alias).put(file).then(snapshot => {
+                    return ref.child(file.alias).getDownloadURL();
+                })
+            }))
+        }
     } 
     
     isStarted(){
@@ -29,6 +39,7 @@ class Firebase{
 
     guardarDocumento = (nombreDoc, documento) => this.storage.ref().child(nombreDoc).put(documento);
     devolverDocumento = (documentoUrl) => this.storage.ref().child(documentoUrl).getDownloadURL();
+    guardarDocumentos = (documentos) => this.storage.ref().guardarDocumentos(documentos)
 }
 
 export default Firebase;

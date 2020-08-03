@@ -51,6 +51,14 @@ const PerfilUsuario = (props) => {
     }));
   };
 
+  useEffect(() => {
+    if (estado.id === "") {
+      if (sesion) {
+        cambiarEstado(sesion.usuario);
+      }
+    }
+  });
+
   const guardarCambios = (e) => {
     e.preventDefault();
     firebase.db
@@ -75,14 +83,7 @@ const PerfilUsuario = (props) => {
         });
       });
   };
-  useEffect(() => {
-    if (estado.id === "") {
-      if (sesion) {
-        cambiarEstado(sesion.usuario);
-      }
-    }
-  });
-
+ 
   const subirFoto = fotos =>{
     const foto = fotos[0];
     const claveUnicaFoto = uuid.v4();
@@ -165,7 +166,7 @@ const PerfilUsuario = (props) => {
             <Grid item xs={12} md={12}>
               <ImageUploader
                 withIcon={false}
-                key={1000}
+                key={fotoKey}
                 singleImage={true}
                 buttonText="Seleccione su imagen de perfil"
                 onChange={subirFoto}
