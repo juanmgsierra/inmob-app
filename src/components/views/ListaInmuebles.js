@@ -79,6 +79,30 @@ class ListaInmuebles extends Component {
         })
     }
 
+    eliminarInmueble = id =>{
+        this.props.firebase.db
+        .collection("Inmuebles")
+        .doc(id)
+        .delete()
+        .then(success=>{
+            this.eliminarInmuebleList(id);
+        })
+    }
+
+    eliminarInmuebleList = id =>{
+        const inmuebleListaNueva = this.state.inmuebles.filter(
+            inmueble => inmueble.id !== id
+        )
+
+        this.setState({
+            inmuebles: inmuebleListaNueva
+        })
+    }
+
+    editarInmueble = id => {
+        this.props.history.push('/inmueble/'+id)
+    }
+
     //metodo se dispara en el momento en que se cargo el componente
     //es asincrono porque tiene que esperar la peticion y el resultado del server
     async componentDidMount(){
@@ -144,10 +168,10 @@ class ListaInmuebles extends Component {
                                             </Typography>
                                         </CardContent>
                                         <CardActions>
-                                            <Button size="small" color="primary">
+                                            <Button size="small" color="primary" onClick={()=> this.editarInmueble(card.id)}>
                                                 Editar
                                             </Button>
-                                            <Button size="small" color="primary">
+                                            <Button size="small" color="primary" onClick={() => this.eliminarInmueble(card.id)}>
                                                 Eliminar
                                             </Button>
                                         </CardActions>

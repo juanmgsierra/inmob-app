@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Toolbar, Typography, Button, IconButton, Drawer, Menu, Avatar } from "@material-ui/core";
+import { Toolbar, Typography, Button, IconButton, Drawer, Avatar } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { consumerFirebase } from "../../../server"
 import { compose } from "recompose"

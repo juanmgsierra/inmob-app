@@ -14,6 +14,7 @@ import { Snackbar } from "@material-ui/core";
 import RutaAutenticada from './components/security/rutaAutenticada';
 import PerfilUsuario from "./components/security/PerfilUsuario";
 import nuevoInmueble from "./components/views/nuevoInmueble";
+import EditarInmueble from "./components/views/EditarInmueble";
 
 function App(props) {
   let firebase = React.useContext(FirebaseContext);
@@ -59,6 +60,8 @@ function App(props) {
               <RutaAutenticada exact path="/" autenticadoFirebase={firebase.auth.currentUser} component={ListaInmuebles} / >
               <RutaAutenticada exact path="/auth/perfil" autenticadoFirebase={firebase.auth.currentUser} component={PerfilUsuario} / >              
               <RutaAutenticada exact path="/inmueble/nuevo" autenticadoFirebase={firebase.auth.currentUser} component={nuevoInmueble} / >                            
+              <RutaAutenticada exact path="/inmueble/:id" autenticadoFirebase={firebase.auth.currentUser} component={EditarInmueble} / >                            
+              
               <Route path="/auth/register" exact component={Registro}></Route>
               <Route path="/auth/login" exact component={login}></Route>
             </Switch>
