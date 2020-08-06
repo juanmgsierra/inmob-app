@@ -184,31 +184,32 @@ class NuevoInmueble extends Component {
                                 maxFileSize={5242880}
                             />
                         </Grid>
-                    </Grid>
-                    <Grid item xs={12} md={6} >
-                        <Table>
-                            <TableBody>
-                                {
-                                    this.state.archivos.map((archivo, i) => (
-                                        <TableRow key={i}>
-                                            <TableCell align="left">
-                                                <img src={archivo.urlTemp} style={style.foto} />
-                                            </TableCell>
-                                            <TableCell>
-                                                <Button
-                                                    variant="contained"
-                                                    color="secondary"
-                                                    size="small"
-                                                    onClick={this.eliminarFoto(archivo.name)}
-                                                >
-                                                    Eliminar
+
+                        <Grid item xs={12} md={6} >
+                            <Table>
+                                <TableBody>
+                                    {
+                                        this.state.archivos.map((archivo, i) => (
+                                            <TableRow key={i}>
+                                                <TableCell align="left">
+                                                    <img src={archivo.urlTemp} style={style.foto} />
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Button
+                                                        variant="contained"
+                                                        color="secondary"
+                                                        size="small"
+                                                        onClick={this.eliminarFoto(archivo.name)}
+                                                    >
+                                                        Eliminar
                                             </Button>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))
-                                }
-                            </TableBody>
-                        </Table>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))
+                                    }
+                                </TableBody>
+                            </Table>
+                        </Grid>
                     </Grid>
                     <Grid container justify="center">
                         <Grid item xs={12} md={6}>
