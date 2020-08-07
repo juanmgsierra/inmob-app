@@ -65,27 +65,22 @@ class ListaInmuebles extends Component {
             name: e.target.value,
             tying: false,
             typingTimeout: setTimeout(goTime => {
-                let objectQuery = this.props.firebase.db
-                    .collection("Inmuebles")
-                    .orderBy("direccion")
-                    .where("keywords", "array-contains", self.state.busquedaText.toLowerCase())
+              const firebase = this.props.firebase;
+              const {paginaSize} = this.state;
 
-                if (self.state.busquedaText.trim() === "") {
-                    objectQuery = this.props.firebase.db
-                        .collection("Inmuebles")
-                        .orderBy("direccion");
+              obtenerDataAnterior(firebase, paginaSize, 0, self.state.busquedaText).then(firebaseReturnData => {
+                const pagina = {
+                    inicialValor: firebaseReturnData.inicialValor,
+                    finalValor: firebaseReturnData.finalValor
                 }
-
-                objectQuery.get().then(snapshot => {
-                    const arrayInmueble = snapshot.docs.map(doc => {
-                        let data = doc.data();
-                        let id = doc.id;
-                        return { id, ...data }
-                    })
-                    this.setState({
-                        inmuebles: arrayInmueble
-                    })
+                const paginas = [];
+                paginas.push(pagina)
+                this.setState({
+                    paginaActual: 0,
+                    paginas,
+                    inmuebles: firebaseReturnData.arrayInmuebles
                 })
+              })
             }, 500)
         })
     }
@@ -145,8 +140,6 @@ class ListaInmuebles extends Component {
                     inicialValor: firebaseReturnData.inicialValor,
                     finalValor: firebaseReturnData.finalValor                     
                 }
-
-                console.log(firebaseReturnData.arrayInmuebles)
                 paginas.push(pagina);
                 this.setState({
                     paginas,

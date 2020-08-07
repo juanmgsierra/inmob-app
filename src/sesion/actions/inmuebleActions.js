@@ -12,7 +12,7 @@ export const obtenerData = (firebase, paginaSize, casaInicial, texto) =>{
             .limit(paginaSize);
 
             if(texto.trim() !== ""){
-                inmuebles = firebase
+                inmuebles = firebase.db
                 .collection("Inmuebles")
                 .orderBy("direccion")
                 .where("keywords","array-contains", texto.toLowerCase())
@@ -54,7 +54,7 @@ export const obtenerDataAnterior = (firebase, paginaSize, casaInicial, texto) =>
             .limit(paginaSize);
 
             if(texto.trim() !== ""){
-                inmuebles = firebase
+                inmuebles = firebase.db
                 .collection("Inmuebles")
                 .orderBy("direccion")
                 .where("keywords","array-contains", texto.toLowerCase())

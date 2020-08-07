@@ -5,13 +5,15 @@ import {
   Typography,
   TextField,
   Button,
+  Grid,
+  Link,
 } from "@material-ui/core";
 import LockOutLineIcon from "@material-ui/icons/LockOutlined";
 import { compose } from "recompose";
 import { consumerFirebase } from "../../server";
-import { iniciarSesion } from '../../sesion/actions/sesionAction';
-import { openMensajePantalla } from '../../sesion/actions/snackbarAction';
-import { StateContext } from '../../sesion/store';
+import { iniciarSesion } from "../../sesion/actions/sesionAction";
+import { openMensajePantalla } from "../../sesion/actions/snackbarAction";
+import { StateContext } from "../../sesion/store";
 
 const style = {
   paper: {
@@ -28,10 +30,14 @@ const style = {
     width: "100%",
     marginTop: 8,
   },
+  submit: {
+    marginTop: 10,
+    marginBottom: 20,
+  },
 };
 
 class login extends Component {
-   static contextType = StateContext;
+  static contextType = StateContext;
 
   state = {
     firebase: null,
@@ -58,21 +64,38 @@ class login extends Component {
     });
   };
 
-  login = async e => {
+  login = async (e) => {
     e.preventDefault();
-    const [{sesion},dispatch] = this.context;
+    const [{ sesion }, dispatch] = this.context;
     const { firebase, usuario } = this.state;
     const { email, password } = usuario;
-    let callBack = await iniciarSesion(dispatch, firebase, email, password)
-    if(callBack.status){
-      this.props.history.push('/home')
-    }else{
-      openMensajePantalla(dispatch,{
+    let callBack = await iniciarSesion(dispatch, firebase, email, password);
+    if (callBack.status) {
+      this.props.history.push("/");
+    } else {
+      openMensajePantalla(dispatch, {
         open: true,
-        mensaje : callBack.error.message
-      })
+        mensaje: callBack.error.message,
+      });
     }
   };
+
+  resetearPassword = () => {
+    const {firebase, usuario} = this.state;
+    const [{sesion},dispatch] = this.context;
+    firebase.auth.sendPasswordResetEmail(usuario.email)
+    .then(success=>{
+      openMensajePantalla(dispatch,{
+        open:true,
+        mensaje:"se ha enviado un correo electronico a tu cuenta"
+      })
+    }).catch(error=>{
+      openMensajePantalla(dispatch,{
+        open:true,
+        mensaje:error.message
+      })
+    })
+  }
 
   render() {
     return (
@@ -103,11 +126,33 @@ class login extends Component {
               margin="normal"
               onChange={this.onChange}
               value={this.state.usuario.password}
-            />           
-            <Button type="submit" fullWidth variant="contained" color="primary" onClick={this.login}>
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              onClick={this.login}
+              style={style.submit}
+            >
               Enviar
             </Button>
+            <Grid container>
+              <Grid item xs>
+                <Link href="#" variant="body2" onClick={this.resetearPassword}>
+                  {"Olvido su cuenta?"}
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link href="/auth/register" variant="body2">
+                  {"No tienes cuenta? Registrate"}
+                </Link>
+              </Grid>
+            </Grid>
           </form>
+          <Button fullWidth variant="contained" style={style.submit} href="#">
+            Ingrese con su telefono
+          </Button>
         </div>
       </Container>
     );
