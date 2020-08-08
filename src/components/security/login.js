@@ -150,7 +150,7 @@ class login extends Component {
               </Grid>
             </Grid>
           </form>
-          <Button fullWidth variant="contained" style={style.submit} href="#">
+          <Button fullWidth variant="contained" style={style.submit} href="/auth/loginTelefono">
             Ingrese con su telefono
           </Button>
         </div>
