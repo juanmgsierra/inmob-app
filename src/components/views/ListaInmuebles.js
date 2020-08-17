@@ -35,8 +35,8 @@ const style = {
     cardContent: {
         flexGrow: 1
     },
-    barraBoton:{
-        marginTop:'20px'
+    barraBoton: {
+        marginTop: '20px'
     }
 }
 
@@ -65,22 +65,22 @@ class ListaInmuebles extends Component {
             name: e.target.value,
             tying: false,
             typingTimeout: setTimeout(goTime => {
-              const firebase = this.props.firebase;
-              const {paginaSize} = this.state;
+                const firebase = this.props.firebase;
+                const { paginaSize } = this.state;
 
-              obtenerDataAnterior(firebase, paginaSize, 0, self.state.busquedaText).then(firebaseReturnData => {
-                const pagina = {
-                    inicialValor: firebaseReturnData.inicialValor,
-                    finalValor: firebaseReturnData.finalValor
-                }
-                const paginas = [];
-                paginas.push(pagina)
-                this.setState({
-                    paginaActual: 0,
-                    paginas,
-                    inmuebles: firebaseReturnData.arrayInmuebles
+                obtenerDataAnterior(firebase, paginaSize, 0, self.state.busquedaText).then(firebaseReturnData => {
+                    const pagina = {
+                        inicialValor: firebaseReturnData.inicialValor,
+                        finalValor: firebaseReturnData.finalValor
+                    }
+                    const paginas = [];
+                    paginas.push(pagina)
+                    this.setState({
+                        paginaActual: 0,
+                        paginas,
+                        inmuebles: firebaseReturnData.arrayInmuebles
+                    })
                 })
-              })
             }, 500)
         })
     }
@@ -110,12 +110,12 @@ class ListaInmuebles extends Component {
     }
 
     anteriorPagina = () => {
-        const {paginaActual, paginaSize, busquedaText, paginas} = this.state;
-        
+        const { paginaActual, paginaSize, busquedaText, paginas } = this.state;
 
-        if(paginaActual > 0){
+
+        if (paginaActual > 0) {
             const firebase = this.props.firebase;
-            obtenerDataAnterior(firebase, paginaSize, paginas[paginaActual - 1].inicialValor, busquedaText ).then(firebaseReturnData =>{
+            obtenerDataAnterior(firebase, paginaSize, paginas[paginaActual - 1].inicialValor, busquedaText).then(firebaseReturnData => {
 
                 const pagina = {
                     inicialValor: firebaseReturnData.inicialValor,
@@ -124,36 +124,39 @@ class ListaInmuebles extends Component {
                 paginas.push(pagina);
                 this.setState({
                     paginas,
-                    paginaActual : paginaActual - 1,
-                    inmuebles : firebaseReturnData.arrayInmuebles
-                })                
+                    paginaActual: paginaActual - 1,
+                    inmuebles: firebaseReturnData.arrayInmuebles
+                })
             })
         }
     }
 
     siguientePagina = () => {
-        const {paginaActual, paginaSize, busquedaText, paginas} = this.state;
+        const { paginaActual, paginaSize, busquedaText, paginas } = this.state;
         const firebase = this.props.firebase;
-        obtenerData(firebase, paginaSize, paginas[paginaActual].finalValor, busquedaText).then(firebaseReturnData => {
-            if(firebaseReturnData.arrayInmuebles.length > 0){
-                const pagina = {
-                    inicialValor: firebaseReturnData.inicialValor,
-                    finalValor: firebaseReturnData.finalValor                     
+
+        if (paginas[paginaActual].finalValor) {
+            obtenerData(firebase, paginaSize, paginas[paginaActual].finalValor, busquedaText).then(firebaseReturnData => {
+                if (firebaseReturnData.arrayInmuebles.length > 0) {
+                    const pagina = {
+                        inicialValor: firebaseReturnData.inicialValor,
+                        finalValor: firebaseReturnData.finalValor
+                    }
+                    paginas.push(pagina);
+                    this.setState({
+                        paginas,
+                        paginaActual: paginaActual + 1,
+                        inmuebles: firebaseReturnData.arrayInmuebles
+                    })
                 }
-                paginas.push(pagina);
-                this.setState({
-                    paginas,
-                    paginaActual: paginaActual + 1,
-                    inmuebles: firebaseReturnData.arrayInmuebles
-                })                
-            }
-        })
+            })
+        }
     }
 
     //metodo se dispara en el momento en que se cargo el componente
     //es asincrono porque tiene que esperar la peticion y el resultado del server
     async componentDidMount() {
-        const {paginaSize, busquedaText, casaInicial, paginas} = this.state;
+        const { paginaSize, busquedaText, casaInicial, paginas } = this.state;
         const firebase = this.props.firebase;
         const firebaseReturnData = await obtenerData(firebase, paginaSize, casaInicial, busquedaText);
 
@@ -161,7 +164,7 @@ class ListaInmuebles extends Component {
             inicialValor: firebaseReturnData.inicialValor,
             finalValor: firebaseReturnData.finalValor
         }
-        
+
         paginas.push(pagina);
         this.setState({
             inmuebles: firebaseReturnData.arrayInmuebles,
