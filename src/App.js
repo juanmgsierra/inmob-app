@@ -16,6 +16,10 @@ import PerfilUsuario from "./components/security/PerfilUsuario";
 import nuevoInmueble from "./components/views/nuevoInmueble";
 import EditarInmueble from "./components/views/EditarInmueble";
 import loginTelefono from "./components/security/loginTelefono";
+import ListaUsuarios from "./components/views/ListaUsuarios";
+
+import store from './redux/store';
+import { Provider } from 'react-redux';
 
 function App(props) {
   let firebase = React.useContext(FirebaseContext);
@@ -30,47 +34,50 @@ function App(props) {
   });
 
   return autenticacionIniciada !== false ? (
-    <React.Fragment>
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        open={openSnackbar ? openSnackbar.open : false}
-        autoHideDuration={3000}
-        ContentProps={{
-          "aria-describedby": "message-id",
-        }}
-        message={
-          <span id="message-id">
-            {openSnackbar ? openSnackbar.mensaje : ""}
-          </span>
-        }
-        onClose={() =>
-          dispatch({
-            type: "OPEN_SNACKBAR",
-            openMensaje: {
-              open: false,
-              mensaje: "",
-            },
-          })
-        }
-      ></Snackbar>
-      <Router>
-        <MuiThemeProvider theme={theme}>
-          <AppNavbar />
-          <Grid container>
-            <Switch>
-              <RutaAutenticada exact path="/" autenticadoFirebase={firebase.auth.currentUser} component={ListaInmuebles} / >
-              <RutaAutenticada exact path="/auth/perfil" autenticadoFirebase={firebase.auth.currentUser} component={PerfilUsuario} / >              
-              <RutaAutenticada exact path="/inmueble/nuevo" autenticadoFirebase={firebase.auth.currentUser} component={nuevoInmueble} / >                            
-              <RutaAutenticada exact path="/inmueble/:id" autenticadoFirebase={firebase.auth.currentUser} component={EditarInmueble} / >                            
-              
-              <Route path="/auth/register" exact component={Registro}></Route>
-              <Route path="/auth/login" exact component={login}></Route>
-              <Route path="/auth/loginTelefono" exact component={loginTelefono}></Route>
-            </Switch>
-          </Grid>
-        </MuiThemeProvider>
-      </Router>
-    </React.Fragment>
+    <Provider store={store}>
+      <React.Fragment>
+        <Snackbar
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          open={openSnackbar ? openSnackbar.open : false}
+          autoHideDuration={3000}
+          ContentProps={{
+            "aria-describedby": "message-id",
+          }}
+          message={
+            <span id="message-id">
+              {openSnackbar ? openSnackbar.mensaje : ""}
+            </span>
+          }
+          onClose={() =>
+            dispatch({
+              type: "OPEN_SNACKBAR",
+              openMensaje: {
+                open: false,
+                mensaje: "",
+              },
+            })
+          }
+        ></Snackbar>
+        <Router>
+          <MuiThemeProvider theme={theme}>
+            <AppNavbar />
+            <Grid container>
+              <Switch>
+                <RutaAutenticada exact path="/" autenticadoFirebase={firebase.auth.currentUser} component={ListaInmuebles} />
+                <RutaAutenticada exact path="/auth/perfil" autenticadoFirebase={firebase.auth.currentUser} component={PerfilUsuario} />
+                <RutaAutenticada exact path="/inmueble/nuevo" autenticadoFirebase={firebase.auth.currentUser} component={nuevoInmueble} />
+                <RutaAutenticada exact path="/inmueble/:id" autenticadoFirebase={firebase.auth.currentUser} component={EditarInmueble} />
+                <RutaAutenticada exact path="/listaUsuarios" autenticadoFirebase={firebase.auth.currentUser} component={ListaUsuarios} />
+
+                <Route path="/auth/register" exact component={Registro}></Route>
+                <Route path="/auth/login" exact component={login}></Route>
+                <Route path="/auth/loginTelefono" exact component={loginTelefono}></Route>
+              </Switch>
+            </Grid>
+          </MuiThemeProvider>
+        </Router>
+      </React.Fragment>
+    </Provider>
   ) : null;
 }
 
