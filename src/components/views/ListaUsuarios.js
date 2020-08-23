@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Paper, Grid, Table, TableBody } from '@material-ui/core'
+import { Container, Paper, Grid, Table, TableBody, TableRow, TableCell, Button } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux';
 import { obtenerUsuariosApp } from '../../redux/actions/usuarioAction';
 
@@ -22,7 +22,7 @@ const ListaUsuarios = props => {
 
     const listaArreglo = useSelector(state => state.usuarioRedux.usuarios);
     const dispatch = useDispatch();
-    console.log(listaArreglo);
+
     useEffect(()=>{
         /*if(!isLoading){
             obtenerUsuariosApp(dispatch).then(success =>{
@@ -46,7 +46,21 @@ const ListaUsuarios = props => {
                     <Grid item xs={12} sm={12}>
                         <Table>
                             <TableBody>
-
+                                {
+                                    listaArreglo ? listaArreglo.map((row,id) => (
+                                       <TableRow key={id}>
+                                            <TableCell align="left">{row.email || row.telefono}</TableCell>
+                                            <TableCell align="left">{row.nombre ? (row.nombre + ' ' + row.apellido) : ""}</TableCell>
+                                            <TableCell>
+                                                <Button variant="contained" color="primary" size="small">Roles</Button>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Button variant="contained" color="primary" size="small">Enviar mensaje</Button>
+                                            </TableCell>
+                                        </TableRow> 
+                                    )
+                                    ) : ""
+                                }
                             </TableBody>
                         </Table>
                     </Grid>
